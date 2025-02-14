@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="title">Schema to Go</h1>
+        <h2 class="subtitle">Convert JSON Schema to Go code</h2>
+        <p class="mention">
+          It is based on <a target="_blank" href="https://github.com/json-schema-faker/json-schema-faker">JSON Schema Faker</a> and <a target="_blank" href="https://mholt.github.io/json-to-go/">json-to-go</a>. View it on <a href="https://github.com/fallais/schema-to-go">GitHub</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="checkbox-container">
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="flatten" [checked]="!flatten" (change)="toggleFlatten($event)">
+            <label for="flatten">Flatten</label>
+          </div>
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="omitempty" (change)="toggleOmitempty($event)">
+            <label for="omitempty">Omitempty</label>
+          </div>
+        </div>
+
+        <button class="btn btn-dark" (click)="copyToClipboard()">Copy to clipboard</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-6">
+    <textarea 
+      id="input" 
+      rows="12" 
+      [(ngModel)]="input"
+      (ngModelChange)="generate()">
+    </textarea>
+    
+  </div>
+
+  <div class="col-md-6">
+    <!-- Error message -->
+    <div class="alert alert-danger" *ngIf="hasError">{{ errorMessage }}</div>
+
+    <!-- Output section -->
+    <div class="output-container">
+      <pre>
+        <code [highlight]="generatedOutput" language="ts"></code>
+      </pre>
+    </div>
+  </div>
+</div>
