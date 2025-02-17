@@ -32,13 +32,13 @@
 
 <div class="row mt-4">
   <div class="col-md-6">
+    Put your JSON schema below
     <textarea 
       id="input" 
       rows="12" 
       [(ngModel)]="input"
       (ngModelChange)="generate()">
     </textarea>
-    
   </div>
 
   <div class="col-md-6">
@@ -46,6 +46,7 @@
     <div class="alert alert-danger" *ngIf="hasError">{{ errorMessage }}</div>
 
     <!-- Output section -->
+    Result will be displayed below
     <div class="output-container">
       <pre>
         <code [highlight]="generatedOutput" language="ts"></code>
