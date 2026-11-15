@@ -26,3 +26,7 @@ Since types are inferred from a generated sample, anything the sample cannot exp
 - nullable types are not turned into pointers
 - `enum` values are not turned into constants
 - recursive schemas are truncated (`[]any`)
+
+## License
+
+MIT, see [LICENSE](LICENSE). `src/app/json-to-go.ts` is a port of [mholt/json-to-go](https://github.com/mholt/json-to-go), MIT licensed, Copyright (c) 2014 Matt Holt.
