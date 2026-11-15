@@ -16,10 +16,15 @@ export class AppComponent {
   readonly input = signal('');
   readonly inline = signal(true);
   readonly omitempty = signal(false);
+  readonly pointers = signal(false);
   readonly copied = signal(false);
 
   readonly result = computed(() =>
-    schemaToGo(this.input(), { inline: this.inline(), omitempty: this.omitempty() }),
+    schemaToGo(this.input(), {
+      inline: this.inline(),
+      omitempty: this.omitempty(),
+      pointers: this.pointers(),
+    }),
   );
 
   readonly highlighted = computed(() => {

@@ -1,6 +1,6 @@
 {
   "name": "schema-to-go",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -18,7 +18,6 @@
     "@angular/platform-browser": "^22.2.6",
     "bootstrap": "^5.3.9",
     "highlight.js": "^11.12.0",
-    "json-schema-faker": "^0.6.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

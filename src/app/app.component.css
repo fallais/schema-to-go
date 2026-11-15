@@ -6,7 +6,8 @@ code {
 
 .checkbox-container {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
+  flex-wrap: wrap;
   margin: 1rem 0;
   align-items: center;
   justify-content: center;

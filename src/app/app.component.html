@@ -5,7 +5,7 @@
         <h1 class="title">schema-to-go</h1>
         <h2 class="subtitle">Convert JSON Schema to Go code</h2>
         <p class="mention">
-          It is based on <a target="_blank" rel="noopener" href="https://github.com/json-schema-faker/json-schema-faker">JSON Schema Faker</a> and <a target="_blank" rel="noopener" href="https://mholt.github.io/json-to-go/">json-to-go</a>. View it on <a target="_blank" rel="noopener" href="https://github.com/fallais/schema-to-go">GitHub</a>.
+          A companion to <a target="_blank" rel="noopener" href="https://mholt.github.io/json-to-go/">json-to-go</a> when you have a schema instead of a sample payload. View it on <a target="_blank" rel="noopener" href="https://github.com/fallais/schema-to-go">GitHub</a>.
         </p>
       </div>
     </div>
@@ -20,7 +20,11 @@
           </div>
           <div class="checkbox-wrapper">
             <input type="checkbox" id="omitempty" [ngModel]="omitempty()" (ngModelChange)="omitempty.set($event)">
-            <label for="omitempty">Omitempty</label>
+            <label for="omitempty">Omitempty on all fields</label>
+          </div>
+          <div class="checkbox-wrapper">
+            <input type="checkbox" id="pointers" [ngModel]="pointers()" (ngModelChange)="pointers.set($event)">
+            <label for="pointers">Pointers for optional fields</label>
           </div>
         </div>
 
