@@ -1,86 +1,44 @@
-import { Component } from '@angular/core';
-import { JSONSchemaFaker } from 'json-schema-faker';
-import { JsonToGoService } from './jsontogo.service';
-import { CommonModule } from '@angular/common';  
+import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HighlightModule } from 'ngx-highlightjs';
-import 'highlight.js/styles/googlecode.min.css';
+import hljs from 'highlight.js/lib/core';
+import go from 'highlight.js/lib/languages/go';
+import { schemaToGo } from './schema-to-go';
+
+hljs.registerLanguage('go', go);
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FormsModule, HighlightModule],
-  providers: [JsonToGoService],
+  imports: [FormsModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-  generatedOutput: string = '';
+  readonly input = signal('');
+  readonly inline = signal(true);
+  readonly omitempty = signal(false);
+  readonly copied = signal(false);
 
-  hasError: boolean = false;
-  errorMessage: string = '';
+  readonly result = computed(() =>
+    schemaToGo(this.input(), { inline: this.inline(), omitempty: this.omitempty() }),
+  );
 
-  flatten: boolean = false;
-  omitempty: boolean = false;
-  input: string = '';
-  constructor(private jsonToGoService: JsonToGoService) { }
+  readonly highlighted = computed(() => {
+    const code = this.result().go;
+    return code ? hljs.highlight(code, { language: 'go' }).value : '';
+  });
 
-  // Handle the generate button click
-  generate() {
-    // Reset the error message
-    this.errorMessage = '';
-    this.hasError = false;
-    this.generatedOutput = '';
+  private copiedTimer?: ReturnType<typeof setTimeout>;
 
-    let parsedJSON: any;
+  async copyToClipboard() {
+    const code = this.result().go;
+    if (!code) return;
     try {
-      parsedJSON = JSON.parse(this.input);
-    } catch (error) {
-      this.errorMessage = 'Invalid JSON';
-      this.hasError = true;
-      return;
-    }
-
-    // Force these options to get consistent data
-    JSONSchemaFaker.option({
-      useExamplesValue: true,
-      alwaysFakeOptionals: true,
-      optionalsProbability: 1,
-      fillProperties: false,
-      random: () => 0.7,
-    });
-    
-    JSONSchemaFaker.resolve(parsedJSON).then((json) => {
-      let jsonString = JSON.stringify(json, null, 2);
-      const goCode = this.jsonToGoService.jsonToGo(jsonString, "", this.flatten, false, this.omitempty);
-      if (goCode.error) {
-        this.errorMessage = goCode.error;
-        this.hasError = true;
-      } else {
-        this.generatedOutput = goCode.go;
-      }
-    });
-  }
-
-  toggleFlatten(event: Event) {
-    this.flatten = !(event.target as HTMLInputElement).checked;
-    this.generate();
-  }
-
-  toggleOmitempty(event: Event) {
-    this.omitempty = (event.target as HTMLInputElement).checked;
-    this.generate();
-  }
-  
-  copyToClipboard() {
-    if (this.generatedOutput) {
-      navigator.clipboard.writeText(this.generatedOutput)
-        .then(() => {
-          // Optional: Add a toast or notification to show success
-          console.log('Copied to clipboard');
-        })
-        .catch(err => {
-          console.error('Failed to copy text: ', err);
-        });
+      await navigator.clipboard.writeText(code);
+      this.copied.set(true);
+      clearTimeout(this.copiedTimer);
+      this.copiedTimer = setTimeout(() => this.copied.set(false), 1500);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
     }
   }
 }

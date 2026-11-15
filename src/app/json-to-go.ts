@@ -21,12 +21,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-import { Injectable } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class JsonToGoService {
+// TypeScript port of mholt/json-to-go (https://github.com/mholt/json-to-go)
+export class JsonToGo {
   private go: string = '';
   private accumulator: string = '';
   private stack: string[] = [];
@@ -44,7 +40,7 @@ export class JsonToGoService {
    * Main entry point: Converts a JSON string into a Go type definition
    * @param json The JSON string to convert
    * @param typename The root struct name (e.g. "MyType")
-   * @param flatten Whether to flatten nested structs as separate top-level types
+   * @param flatten Whether to emit nested structs as separate top-level types
    * @param example Whether to include `example:"..."` tags on fields
    * @param allOmitempty Whether all fields should have `,omitempty`
    * @returns Object with `go` or an `error`
@@ -363,7 +359,7 @@ export class JsonToGoService {
         '8': 'Eight_',
         '9': 'Nine_'
       };
-      return numbers[str.charAt(0)] + str.substr(1);
+      return numbers[str.charAt(0)] + str.slice(1);
     }
     return str;
   }
@@ -463,7 +459,7 @@ export class JsonToGoService {
     const reLiteralUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     const uuidLength = 36;
     if (unique.length >= uuidLength) {
-      const tail = unique.substr(-uuidLength);
+      const tail = unique.slice(-uuidLength);
       if (reLiteralUUID.test(tail)) {
         return unique.slice(0, -1 * (uuidLength + 1));
       }

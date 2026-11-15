@@ -5,7 +5,7 @@
         <h1 class="title">schema-to-go</h1>
         <h2 class="subtitle">Convert JSON Schema to Go code</h2>
         <p class="mention">
-          It is based on <a target="_blank" href="https://github.com/json-schema-faker/json-schema-faker">JSON Schema Faker</a> and <a target="_blank" href="https://mholt.github.io/json-to-go/">json-to-go</a>. View it on <a target="_blank" href="https://github.com/fallais/schema-to-go">GitHub</a>.
+          It is based on <a target="_blank" rel="noopener" href="https://github.com/json-schema-faker/json-schema-faker">JSON Schema Faker</a> and <a target="_blank" rel="noopener" href="https://mholt.github.io/json-to-go/">json-to-go</a>. View it on <a target="_blank" rel="noopener" href="https://github.com/fallais/schema-to-go">GitHub</a>.
         </p>
       </div>
     </div>
@@ -15,16 +15,18 @@
       <div class="card-body text-center">
         <div class="checkbox-container">
           <div class="checkbox-wrapper">
-            <input type="checkbox" id="flatten" [checked]="!flatten" (change)="toggleFlatten($event)">
-            <label for="flatten">Flatten</label>
+            <input type="checkbox" id="inline" [ngModel]="inline()" (ngModelChange)="inline.set($event)">
+            <label for="inline">Inline type definitions</label>
           </div>
           <div class="checkbox-wrapper">
-            <input type="checkbox" id="omitempty" (change)="toggleOmitempty($event)">
+            <input type="checkbox" id="omitempty" [ngModel]="omitempty()" (ngModelChange)="omitempty.set($event)">
             <label for="omitempty">Omitempty</label>
           </div>
         </div>
 
-        <button class="btn btn-dark" (click)="copyToClipboard()">Copy to clipboard</button>
+        <button class="btn btn-dark" [disabled]="!result().go" (click)="copyToClipboard()">
+          {{ copied() ? 'Copied!' : 'Copy to clipboard' }}
+        </button>
       </div>
     </div>
   </div>
@@ -32,25 +34,24 @@
 
 <div class="row mt-4">
   <div class="col-md-6">
-    Put your JSON schema below
-    <textarea 
-      id="input" 
-      rows="12" 
-      [(ngModel)]="input"
-      (ngModelChange)="generate()">
+    <label for="input">Put your JSON schema below</label>
+    <textarea
+      id="input"
+      rows="12"
+      spellcheck="false"
+      [ngModel]="input()"
+      (ngModelChange)="input.set($event)">
     </textarea>
   </div>
 
   <div class="col-md-6">
-    <!-- Error message -->
-    <div class="alert alert-danger" *ngIf="hasError">{{ errorMessage }}</div>
+    @if (result().error; as error) {
+      <div class="alert alert-danger">{{ error }}</div>
+    }
 
-    <!-- Output section -->
     Result will be displayed below
     <div class="output-container">
-      <pre>
-        <code [highlight]="generatedOutput" language="ts"></code>
-      </pre>
+      <pre><code class="hljs language-go" [innerHTML]="highlighted()"></code></pre>
     </div>
   </div>
 </div>
